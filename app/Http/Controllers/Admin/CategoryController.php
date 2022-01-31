@@ -77,7 +77,6 @@ class CategoryController extends Controller
             'status' => 200,
             'message' => "Category Added Successfully"
         ]);
-
     }
 
     public function edit(Category $category){

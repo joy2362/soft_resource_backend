@@ -135,4 +135,13 @@ class SubCategoryController extends Controller
             'message' => "Category Deleted successfully"
         ]);
     }
+
+    public function fetch_sub_category(Category $category){
+        $sub_category = sub_category::where('category_id',$category->id)->get();
+
+        return response()->json([
+            'status' => 200,
+            'sub_category' => $sub_category
+        ]);
+    }
 }

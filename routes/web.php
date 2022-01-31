@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,9 @@ Route::get('/',  [AdminController::class, 'dashboard'])->name('home');
 
 Route::get('/two-factor-recover',  [AdminController::class, 'two_factor_recover']);
 Route::resource('category', CategoryController::class,array('except'=>['create','show']));
-Route::resource('/sub-category', SubCategoryController::class,array('except'=>['create','show']));
+Route::resource('item', ItemController::class,array('except'=>['create','show']));
+Route::resource('sub-category', SubCategoryController::class,array('except'=>['create','show']));
+Route::get('sub-category/fetch/{category}', [SubCategoryController::class,'fetch_sub_category']);
 
 Route::get('/profile/setting', function () {
     return view('admin.pages.profile_setting.index');

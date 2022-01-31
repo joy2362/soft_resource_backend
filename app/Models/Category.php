@@ -15,7 +15,7 @@ class Category extends Model implements HasMedia
      *
      * @var array
      */
-    protected $appends = ['logo','NumberOfSubCategory'];
+    protected $appends = ['logo','NumberOfSubCategory','numberOfItems'];
 
 
     /**
@@ -29,7 +29,7 @@ class Category extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['deleted_by','created_by','sub_category','updated_by'];
+    protected $with = ['deleted_by','created_by','sub_category','updated_by','items'];
     /**
      * Register the media collections
      *
@@ -74,7 +74,12 @@ class Category extends Model implements HasMedia
 
     public function items()
     {
-        return $this->hasManyThrough(Item::class, sub_category::class);
+        return $this->hasMany(Item::class);
     }
+    public function getnumberOfItemsAttribute()
+    {
+        return $this->items()->count();
+    }
+
 
 }

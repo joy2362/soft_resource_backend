@@ -20,6 +20,11 @@
                     <i class="align-middle" data-feather="folder"></i> <span class="align-middle">Sub-Category</span>
                 </a>
             </li>
+            <li class="sidebar-item {{ request()->routeIs('item.index') ? 'active' : '' }}">
+                <a class="sidebar-link" href="{{ route('item.index') }}">
+                    <i class="align-middle" data-feather="file"></i> <span class="align-middle">Item</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

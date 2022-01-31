@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class sub_category extends Model
 {
+    protected $guarded = [];
     /**
      * The table associated with the model.
      *
