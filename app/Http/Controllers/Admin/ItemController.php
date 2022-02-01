@@ -107,6 +107,70 @@ class ItemController extends Controller
 
     }
 
+    public function edit(Item $item){
+        $subcategory = sub_category::where('category_id',$item->category_id)->get();
+        return response()->json([
+            'status' => 200,
+            'item' => $item,
+            'subcategory'=>$subcategory
+        ]);
+    }
+
+    public function update(Request $request,Item $item)
+    {
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|max:191',
+            'category' => 'required',
+            'sub_category' => 'nullable',
+            'release_date' => 'nullable|date',
+            'description' => 'nullable|max:5000',
+            'rating' => 'nullable',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png',
+        ]);
+
+        if ($validator->fails()){
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->messages()
+            ]);
+        }
+
+        $item->item_name = $request->name;
+        $item->release_date = $request->release_date;
+        $item->item_description = $request->description;
+        $item->item_rating = $request->rating;
+        $item->category_id = $request->category;
+        $item->sub_category_id = $request->sub_category;
+
+        $item->is_requested = (bool)$request->is_requested;
+        $item->is_slider = (bool)$request->is_slider;
+        $item->status = $request->status;
+
+        $item->updated_by = Auth::id();
+        $item->save();
+
+        if ($request->has('image')) {
+            $item->addMedia($request->file('image'))->toMediaCollection('image');
+        }
+
+        $item->download()->delete();
+
+        for($i = 0;$i<count($request->type);$i++){
+            $item->download()->updateOrCreate([
+                    "type" => $request->type[$i],
+                    "label" => $request->link_label[$i],
+                    "updated_by" => Auth::id(),
+                ],["link" => $request->link[$i]]
+            );
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Item Update Successfully"
+        ]);
+
+    }
+
     public function destroy(Item $item)
     {
         $item->deleted_by = Auth::id();
