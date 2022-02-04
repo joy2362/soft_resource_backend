@@ -5,7 +5,7 @@
 
 @yield('meta')
 
-<link rel="shortcut icon" href="{{asset('admin/img/icons/icon-48x48.png')}}" />
+<link rel="shortcut icon" href="{{$app_logo}}" />
 @yield('title')
 
 <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet">

@@ -40,4 +40,12 @@ class AdminController extends Controller
     public function two_factor_recover(){
         return view("auth.two-factor-recovery");
     }
+
+    public function profile_edit(){
+        return view('admin.pages.profile_setting.profile');
+    }
+
+    public function profile_setting(){
+        return view('admin.pages.profile_setting.index');
+    }
 }

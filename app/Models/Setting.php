@@ -10,26 +10,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Setting extends Model implements HasMedia
 {
     use HasFactory,InteractsWithMedia;
-    /**
-     * The attributes that are not mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'settings' => 'array',
-    ];
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['logo'];
+
+    protected $appends = ['AppLogo'];
 
     /**
      * Register the media collections
@@ -38,17 +20,11 @@ class Setting extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('logo')->singleFile();
+        $this->addMediaCollection('app_logo')->singleFile();
     }
-    /**
-     * Get the logo of the settings
-     *
-     * @return string
-     */
-    public function getLogoAttribute()
+
+    public function getAppLogoAttribute()
     {
-        return $this->getFirstMediaUrl('logo');
+        return $this->getFirstMediaUrl('app_logo');
     }
-
-
 }

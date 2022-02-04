@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\CategoryStatus;
 use App\Enums\DeleteStatus;
+use App\Enums\SubCategoryStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ApiResource;
-use App\Http\Resources\CategoryResource;
-use App\Models\Category;
+use App\Http\Resources\sub_categoryResource;
+use App\Models\sub_category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class sub_categoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,8 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category = Category::where('status',CategoryStatus::ACTIVE())->where('is_deleted',DeleteStatus::NO())->get();
-        return CategoryResource::collection($category);
+        $sub_category = sub_category::where('status',SubCategoryStatus::ACTIVE())->where('is_deleted',DeleteStatus::NO())->get();
+        return sub_categoryResource::collection($sub_category);
     }
 
     /**
@@ -38,12 +37,11 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return CategoryResource
+     * @return sub_categoryResource
      */
-    public function show(Category $category)
+    public function show(sub_category $sub_category)
     {
-        //$category = Category::where('status',CategoryStatus::ACTIVE())->where('is_deleted',DeleteStatus::NO())->where('id',$id)->first();
-        return new CategoryResource($category);
+        return new sub_categoryResource($sub_category);
     }
 
     /**
