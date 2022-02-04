@@ -48,4 +48,8 @@ class AdminController extends Controller
     public function profile_setting(){
         return view('admin.pages.profile_setting.index');
     }
+
+    public function recoveryCodeShow(){
+        return view('admin.pages.profile_setting.recovery');
+    }
 }

@@ -16,11 +16,13 @@
             <li class="sidebar-header">
                 Main Content
             </li>
+
             <li class="sidebar-item {{ request()->routeIs('category.index') ? 'active' : '' }}">
                 <a class="sidebar-link" href="{{ route('category.index') }}">
                     <i class="align-middle" data-feather="list"></i> <span class="align-middle">Category</span>
                 </a>
             </li>
+
             <li class="sidebar-item {{ request()->routeIs('sub-category.index') ? 'active' : '' }}">
                 <a class="sidebar-link" href="{{ route('sub-category.index') }}">
                     <i class="align-middle" data-feather="folder"></i> <span class="align-middle">Sub-Category</span>
@@ -44,7 +46,17 @@
             <li class="sidebar-header">
                 admin
             </li>
-           
+
+            <li class="sidebar-item {{ request()->routeIs('role.index') ? 'active' : '' }}">
+                <a class="sidebar-link" href="{{ route('role.index') }}">
+                    <i class="align-middle" data-feather="check"></i> <span class="align-middle">Role</span>
+                </a>
+            </li>
+            <li class="sidebar-item {{ request()->routeIs('setting.index') ? 'active' : '' }}">
+                <a class="sidebar-link" href="{{ route('setting.index') }}">
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Admin</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
