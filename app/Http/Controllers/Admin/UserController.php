@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
 
-class RoleControlelr extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,30 +22,33 @@ class RoleControlelr extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()){
-            $role = Role::all();
-            $data = DataTables::of($role)
+        if ($request->wantsJson()){
+            $user = User::where('id','!=',Auth::id())->get();
+            $data = DataTables::of($user)
                 ->addIndexColumn()
+                ->addColumn('logo',function($row){
+                    return  '<img src="'.$row->avatar.'" width="60px" height="60px" alt="image">';
 
+                })
                 ->addColumn('actions',function($row){
-                    if(auth()->user()->hasPermissionTo('edit role') || auth()->user()->hasRole('Super Admin')){
+                    if(auth()->user()->hasPermissionTo('edit admin') || auth()->user()->hasRole('Super Admin')){
                         $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" value="'.$row->id.'">Edit</button>';
                     }else{
                         $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" disabled value="'.$row->id.'">Edit</button>';
                     }
-                    if(auth()->user()->hasPermissionTo('delete role') || auth()->user()->hasRole('Super Admin')){
+                    if(auth()->user()->hasPermissionTo('delete admin') || auth()->user()->hasRole('Super Admin')){
                         $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" value="'.$row->id.'">Delete</button>';
                     }else{
                         $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" disabled value="'.$row->id.'">Delete</button>';
                     }
                         return $btn;
                 })
-                ->rawColumns(['actions'])
+                ->rawColumns(['logo','actions'])
                 ->make(true);
             return $data;
         }
-        $permissions = Permission::all();
-        return view('admin.pages.role.index',['permissions'=>$permissions]);
+        $role = Role::all();
+        return view("admin.pages.admin.index",['roles'=>$role]);
     }
 
     /**
@@ -65,6 +71,10 @@ class RoleControlelr extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name' => 'required|max:191',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'avatar' => 'required|image|mimes:jpg,jpeg,png',
+            'role' => 'required',
         ]);
 
         if ($validator->fails()){
@@ -74,17 +84,29 @@ class RoleControlelr extends Controller
             ]);
         }
 
-        $role = Role::create([
-            'name'=>$request->name,
+        $admin = User::create([
+            'name' => $request->name,
+            'email'=> $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
-        $role->syncPermissions($request->permissions);
+        if ($request->has('avatar')) {
+            $admin->addMedia($request->file('avatar'))->toMediaCollection('avatar');
+        }
+
+        $role = Role::find($request->role);
+
+        if ($role->name == 'Super Admin'){
+            $admin->assignRole($role->name);
+        }else{
+            $admin->assignRole($role->name);
+            $admin->syncPermissions([ $role->permissions]);
+        }
 
         return response()->json([
             'status' => 200,
-            'message' => "Role Added Successfully"
+            'message' => "Admin Added Successfully"
         ]);
-
     }
 
     /**
@@ -95,21 +117,22 @@ class RoleControlelr extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $role
+     * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Role $role)
+    public function edit(User $user)
     {
+      // return  $user->roles;
         return response()->json([
             'status' => 200,
-            'role' => $role,
-            'permissions' => $role->permissions,
+            'user' => $user,
+            'role' => $user->roles[0],
         ]);
     }
 
@@ -120,10 +143,11 @@ class RoleControlelr extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, User $user)
     {
         $validator = Validator::make($request->all(),[
             'name' => 'required|max:191',
+            'role' => 'required',
         ]);
 
         if ($validator->fails()){
@@ -132,20 +156,21 @@ class RoleControlelr extends Controller
                 'errors' => $validator->messages()
             ]);
         }
+        $user->name = $request->name;
+        $user->save();
 
-        $users = User::role($role->name)->get();
+        $role = Role::find($request->role);
 
-        foreach ($users as $user){
-            $user->syncPermissions( $role->permissions );
+        if ($role->name == 'Super Admin'){
+            $user->assignRole($role->name);
+        }else{
+            $user->assignRole($role->name);
+            $user->syncPermissions([ $role->permissions]);
         }
-
-        $role->name = $request->name;
-        $role->save();
-        $role->syncPermissions($request->permissions);
 
         return response()->json([
             'status' => 200,
-            'message' => "Role Update Successfully"
+            'message' => "Admin Update Successfully"
         ]);
     }
 
@@ -155,15 +180,12 @@ class RoleControlelr extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Role $role)
+    public function destroy(User $user)
     {
-        $role->revokePermissionTo(Permission::all());
-
-        $role->delete();
+        $user->delete();
         return response()->json([
             'status' => 200,
-            'message' => "Role Delete Successfully"
+            'message' => "Admin Removed Successfully"
         ]);
-
     }
 }

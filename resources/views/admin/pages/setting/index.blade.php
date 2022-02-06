@@ -18,7 +18,9 @@
                         <div class="card-body text-center">
                             <img src="{{ $App_logo }}" alt="{{$App_Name}}" class="img-fluid rounded-circle mb-2" style="width:150px; height:150px;" />
                             <div>
-                                <button data-bs-toggle="modal" data-bs-target="#changeImage" class="btn btn-primary btn-sm">Change Image</button>
+                                @can('edit setting')
+                                    <button data-bs-toggle="modal" data-bs-target="#changeImage" class="btn btn-primary btn-sm">Change Image</button>
+                                @endcan
                             </div>
                         </div>
                         <hr class="my-0" />
@@ -106,8 +108,9 @@
                                             </span>
                                         @enderror
                                     </div>
-
-                                    <button type="submit" class="btn btn-sm btn-danger mt-1"> Update</button>
+                                    @can('edit setting')
+                                        <button type="submit" class="btn btn-sm btn-success mt-1"> Update</button>
+                                    @endcan
                                 </form>
                             </div>
                         </div>

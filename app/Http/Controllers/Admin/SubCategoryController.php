@@ -35,8 +35,16 @@ class SubCategoryController extends Controller
             $data = DataTables::of($subCategory)
                 ->addIndexColumn()
                 ->addColumn('actions',function($row){
-                    $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" value="'.$row->id.'">Edit</button>';
-                    $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" value="'.$row->id.'">Delete</button>';
+                    if(auth()->user()->hasPermissionTo('edit sub-category') || auth()->user()->hasRole('Super Admin')){
+                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" value="'.$row->id.'">Edit</button>';
+                    }else{
+                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" disabled value="'.$row->id.'">Edit</button>';
+                    }
+                    if(auth()->user()->hasPermissionTo('delete sub-category') || auth()->user()->hasRole('Super Admin')){
+                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button"  value="'.$row->id.'">Delete</button>';
+                    }else{
+                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" disabled value="'.$row->id.'">Delete</button>';
+                    }
                     return $btn;
                 })
                 ->rawColumns(['actions'])

@@ -7,7 +7,9 @@
         <div class="container-fluid p-0">
 
             <h1 class="h3 mb-3">Sub-Category
+                @can('create sub-category')
                 <a href="#" class="float-end btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#add_Sub_Category">Add New</a>
+                @endcan
             </h1>
             <!-- Modal for add  -->
             <div class="modal fade" id="add_Sub_Category" tabindex="-1" aria-labelledby="add_sub_category_Label" aria-hidden="true">
@@ -252,6 +254,7 @@
 
                             $('#editSubCategoryForm').find('input[name="name"]').val('');
                             $('#editSubCategoryForm').find('input[name="category"]').val('');
+
                             $('#edit_sub_category').modal('hide');
                             $('#datatable1').DataTable().draw();
                             Swal.fire(

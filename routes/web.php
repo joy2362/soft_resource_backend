@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\RoleControlelr;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Category;
 
@@ -26,7 +27,9 @@ Route::resource('category', CategoryController::class,array('except'=>['create',
 Route::resource('item', ItemController::class,array('except'=>['create','show']));
 Route::resource('sub-category', SubCategoryController::class,array('except'=>['create','show']));
 Route::resource('role', RoleControlelr::class,array('except'=>['create','show']));
-Route::resource('setting', SettingController::class,array('except'=>['create','show']));
+Route::resource('user', UserController::class,array('except'=>['create','show']));
+Route::resource('setting', SettingController::class,array('except'=>['create','show']))
+;
 Route::post('setting/change/logo', [SettingController::class,'change_logo'])->name('setting.logo.change');
 Route::get('sub-category/fetch/{category}', [SubCategoryController::class,'fetch_sub_category']);
 

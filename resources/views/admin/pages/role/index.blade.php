@@ -6,7 +6,9 @@
     <main class="content">
         <div class="container-fluid p-0">
             <h1 class="h3 mb-3">Role
+                @can('create role')
                 <a href="#" class="float-end btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#add_Role">Add Role</a>
+                @endcan
             </h1>
             <!-- Modal for add  -->
             <div class="modal fade" id="add_Role" tabindex="-1" aria-labelledby="add_role_Label" aria-hidden="true">

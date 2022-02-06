@@ -29,10 +29,22 @@ class CategoryController extends Controller
                     return  '<img src="'.$row->logo.'" width="60px" height="60px" alt="image">';
 
                 })
+
                 ->addColumn('actions',function($row){
-                    $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" value="'.$row->id.'">Edit</button>';
-                    $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" value="'.$row->id.'">Delete</button>';
-                    return $btn;
+
+                    if(auth()->user()->hasPermissionTo('edit category') || auth()->user()->hasRole('Super Admin')){
+                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" value="'.$row->id.'">Edit</button>';
+                    }else{
+                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button " disabled value="'.$row->id.'">Edit</button>';
+                    }
+                    if(auth()->user()->hasPermissionTo('delete category') || auth()->user()->hasRole('Super Admin')){
+                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" value="'.$row->id.'">Delete</button>';
+                    }else{
+                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" disabled value="'.$row->id.'">Delete</button>';
+
+                    }
+
+                        return $btn;
                 })
                 ->rawColumns(['logo','actions'])
                 ->make(true);

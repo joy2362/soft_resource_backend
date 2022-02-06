@@ -31,8 +31,6 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'edit item']);
 
         Permission::create(['name' => 'view setting']);
-        Permission::create(['name' => 'create setting']);
-        Permission::create(['name' => 'delete setting']);
         Permission::create(['name' => 'edit setting']);
 
         Permission::create(['name' => 'view admin']);
@@ -45,10 +43,7 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'delete role']);
         Permission::create(['name' => 'edit role']);
 
-        $systemAdmin = Role::create(['name' => 'System Admin']);
-        $systemAdmin->givePermissionTo(Permission::all());
-        $SuperAdmin = Role::create(['name' => ' Super Admin']);
-        $SuperAdmin->givePermissionTo(Permission::all());
+        Role::create(['name' => 'Super Admin']);
 
         $admin = Role::create(['name' => 'Admin']);
         $admin->givePermissionTo(Permission::all());

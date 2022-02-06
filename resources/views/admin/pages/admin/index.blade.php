@@ -1,35 +1,56 @@
 @extends('admin.layout.master')
 @section('title')
-    <title>Category</title>
+    <title>Admin</title>
 @endsection
 @section('content')
     <main class="content">
         <div class="container-fluid p-0">
-            <h1 class="h3 mb-3">Category
-                @can('create category')
-                    <a href="#" class="float-end btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#add_Category">Add Category</a>
+            <h1 class="h3 mb-3">Admin
+                @can('create admin')
+                <a href="#" class="float-end btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#add_Admin">Add Admin</a>
                 @endcan
             </h1>
             <!-- Modal for add  -->
-            <div class="modal fade" id="add_Category" tabindex="-1" aria-labelledby="add_category_Label" aria-hidden="true">
-                <div class="modal-dialog">
+            <div class="modal fade" id="add_Admin" tabindex="-1" aria-labelledby="add_admin_Label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="add_category_Label">Add Category</h5>
+                            <h5 class="modal-title" id="add_admin_Label">Add Admin</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="post" enctype="multipart/form-data" id="addCategoryForm">
+                        <form method="post" enctype="multipart/form-data" id="addAdminForm">
                             <div class="modal-body">
                                 <ul class="alert alert-danger d-none" id="save_errorList"></ul>
+
                                 <div class="form-group mb-3">
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="name" name="name" required>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="logo" class="form-label">Category logo</label>
-                                    <input class="form-control" type="file" id="logo" name="logo" accept="image/*" required>
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="avatar" class="form-label">Avatar</label>
+                                    <input class="form-control" type="file" id="avatar" name="avatar" accept="image/*" required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="role" class="form-label">Role</label>
+                                    <select class="form-select" id="role" name="role" required>
+                                        @foreach($roles as $row)
+                                            <option value="{{$row->id}}">{{$row->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -42,41 +63,32 @@
             <!-- end Modal for add-->
 
             <!-- Modal for update  -->
-            <div class="modal fade" id="edit_category" tabindex="-1" aria-labelledby="edit_category_Label" aria-hidden="true">
-                <div class="modal-dialog">
+            <div class="modal fade" id="edit_admin" tabindex="-1" aria-labelledby="edit_admin_Label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="edit_category_Label">Edit Category</h5>
+                            <h5 class="modal-title" id="edit_admin_Label">Edit Admin</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="post" enctype="multipart/form-data" id="editCategoryForm">
+                        <form method="post" enctype="multipart/form-data" id="editAdminForm">
                             <div class="modal-body">
                                 <ul class="alert alert-danger d-none" id="edit_errorList"></ul>
+
                                 <div class="form-group mb-3">
                                     <label for="edit_name" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="edit_name" name="name" required>
-                                    <input type="hidden" id="edit_id" name="id" >
+                                    <input type="hidden" id="edit_id" name="id" required>
                                 </div>
-                                <div class="form-group mb-3">
-                                    <label  class="form-label mr-2">Status: </label>
-                                    <input class="form-check-input" type="radio" name="status" id="edit_status_active" value="active" >
-                                    <label class="form-check-label" for="edit_status_active">
-                                        Active
-                                    </label>
-                                    <input class="form-check-input" type="radio" name="status" id="edit_status_inactive" value="inactive">
-                                    <label class="form-check-label" for="edit_status_inactive">
-                                        Inactive
-                                    </label>
-                                </div>
-                                <div  class="form-group mb-3">
-                                    <label >Current  logo</label><br>
-                                    <img src="" width="100px" height="100px" alt="image" id="current_logo">
 
-                                </div>
                                 <div class="form-group mb-3">
-                                    <label for="edit_logo" class="form-label">Category logo</label>
-                                    <input class="form-control" type="file" id="edit_logo" name="logo" accept="image/*">
+                                    <label for="edit_role" class="form-label">Role</label>
+                                    <select class="form-select" id="edit_role"  name="role" required>
+                                        @foreach($roles as $row)
+                                            <option value="{{$row->id}}">{{$row->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -100,10 +112,8 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Logo</th>
-                                        <th>Total Sub-category</th>
-                                        <th>Added By</th>
-                                        <th>Status</th>
+                                        <th>Email</th>
+                                        <th>Avatar</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
@@ -145,14 +155,12 @@
 
                     processing: true,
                     serverSide:true,
-                    ajax:"{{route('category.index')}}",
+                    ajax:"{{route('user.index')}}",
                     columns:[
                         {data:"id",name:'ID'},
-                        {data:"category_name",name:'Name'},
-                        {data:"logo",name:'Logo'},
-                        {data:"NumberOfSubCategory",name:'Total Sub-category'},
-                        {data:"created_by.name",name:'Added By'},
-                        {data:"status",name:'status'},
+                        {data:"name",name:'Name'},
+                        {data:"email",name:'Email'},
+                        {data:"logo",name:'Avatar'},
                         {data:"actions",name:'Actions'},
                     ]
                 });
@@ -161,24 +169,19 @@
             $(document).on('click','.edit_button',function(e){
                 e.preventDefault();
                 let id = $(this).val();
-                console.log(id);
-                $('#edit_category').modal('show');
+
+                $('#edit_admin').modal('show');
                 ajaxsetup();
                 $.ajax({
                     type:'get',
-                    url:"/category/"+id+"/edit",
+                    url:"/user/"+id+"/edit",
                     dataType:'json',
                     success: function(response){
                         if(response.status === 200){
-                            $('#edit_id').val(response.category.id);
-                            $('#edit_name').val(response.category.category_name);
+                            $('#edit_id').val(response.user.id);
+                            $('#edit_name').val(response.user.name);
+                            $('#edit_role').val(response.role.id);
 
-                            if(response.category.status === 'active'){
-                                $("#edit_status_active").prop("checked", true);
-                            }else{
-                                $("#edit_status_inactive").prop("checked", true);
-                            }
-                            $("#current_logo").attr("src",  response.category.logo );
                         }
                     }
                 })
@@ -187,16 +190,16 @@
 
             });
 
-            $(document).on('submit','#addCategoryForm',function(e){
+            $(document).on('submit','#addAdminForm',function(e){
                 e.preventDefault();
 
-                let formData = new FormData($('#addCategoryForm')[0]);
+                let formData = new FormData($('#addAdminForm')[0]);
 
                 ajaxsetup();
                 $.ajax({
-                    type:'post',
+                    type:'POST',
                     enctype: 'multipart/form-data',
-                    url:"{{route('category.store')}}",
+                    url:"{{route('user.store')}}",
                     data:formData,
                     processData: false,
                     contentType: false,
@@ -211,10 +214,8 @@
                         else if(response.status === 200){
                             $('#save_errorList').html("");
                             $('#save_errorList').addClass("d-none");
-
-                            $('#addCategoryForm').find('input[name="name"]').val('');
-                            $('#addCategoryForm').find('input[name="logo"]').val('');
-                            $('#add_Category').modal('hide');
+                            location.reload();
+                            $('#add_Admin').modal('hide');
 
                             $('#datatable1').DataTable().draw();
                             Swal.fire(
@@ -229,18 +230,18 @@
                 })
             });
 
-            $(document).on('submit','#editCategoryForm',function(e){
+            $(document).on('submit','#editAdminForm',function(e){
                 e.preventDefault();
                 let  id = $('#edit_id').val();
-                //console.log(id);
-                let editFormData = new FormData($('#editCategoryForm')[0]);
+
+                let editFormData = new FormData($('#editAdminForm')[0]);
                 editFormData.append('_method', 'PUT');
                 ajaxsetup();
-                //console.log(editFormData);
+
                 $.ajax({
                     type:'post',
                     enctype: 'multipart/form-data',
-                    url:"/category/"+id,
+                    url:"/user/"+id,
                     data: editFormData,
                     contentType:false,
                     processData:false,
@@ -256,9 +257,9 @@
                             $('#edit_errorList').html("");
                             $('#edit_errorList').addClass("d-none");
 
-                            $('#editCategoryForm').find('input[name="name"]').val('');
-                            $('#editCategoryForm').find('input[name="logo"]').val('');
-                            $('#edit_category').modal('hide');
+                            location.reload();
+                            $('#edit_admin').modal('hide');
+
                             $('#datatable1').DataTable().draw();
                             Swal.fire(
                                 'Success!',
@@ -289,7 +290,7 @@
                         ajaxsetup();
                         $.ajax({
                             type:'DELETE',
-                            url:"/category/"+id,
+                            url:"/user/"+id,
                             dataType:'json',
                             success: function(response){
                                 if(response.status == 404){

@@ -6,7 +6,9 @@
     <main class="content">
         <div class="container-fluid p-0">
             <h1 class="h3 mb-3">Item
+                @can('create item')
                 <a href="#" class="float-end btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#add_Item">Add Item</a>
+                @endcan
             </h1>
             <!-- Modal for add  -->
             <div class="modal fade" id="add_Item" tabindex="-1" aria-labelledby="add_Item_Label" aria-hidden="true">
