@@ -27,9 +27,7 @@ class CategoryController extends Controller
                 ->addIndexColumn()
                 ->addColumn('logo',function($row){
                     return  '<img src="'.$row->logo.'" width="60px" height="60px" alt="image">';
-
                 })
-
                 ->addColumn('actions',function($row){
 
                     if(auth()->user()->hasPermissionTo('edit category') || auth()->user()->hasRole('Super Admin')){

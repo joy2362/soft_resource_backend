@@ -9,9 +9,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Item extends Model implements HasMedia
 {
-    use HasFactory,InteractsWithMedia;
+    use HasFactory, InteractsWithMedia;
+
     protected $appends = ['image'];
-    protected $with =['download','created_by','updated_by','deleted_by'];
+    protected $with = ['download', 'created_by', 'updated_by', 'deleted_by'];
     protected $guarded = [];
 
     public function registerMediaCollections(): void
@@ -33,6 +34,7 @@ class Item extends Model implements HasMedia
     {
         return $this->download()->count();
     }
+
     /**
      *
      */
@@ -41,18 +43,24 @@ class Item extends Model implements HasMedia
         return $this->belongsTo(Category::class);
     }
 
+    public function subCategory()
+    {
+        return $this->belongsTo(sub_category::class);
+    }
+
     public function created_by()
     {
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function updated_by()
     {
-        return $this->belongsTo(User::class,'updated_by');
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function deleted_by()
     {
-        return $this->belongsTo(User::class,'deleted_by');
+        return $this->belongsTo(User::class, 'deleted_by');
     }
+
 }

@@ -28,6 +28,8 @@ Route::resource('/items',itemController::class)->only('index','show');
 Route::get('/is-requested/items',[itemController::class,'requestedItem']);
 Route::get('/slider/items',[itemController::class,'sliderItem']);
 Route::get('/settings',[ApiController::class,'settings']);
+Route::post('/items/search',[ApiController::class,'searchItem']);
+
 
 
 

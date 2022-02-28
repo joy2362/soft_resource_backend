@@ -9,6 +9,7 @@ use App\Http\Resources\ItemResource;
 use App\Models\Item;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
@@ -26,6 +27,18 @@ class ApiController extends Controller
            "App_Declaimer" => $app_declaimer->value,
            "About_Us" => $about_us->value,
        ]);
+    }
+
+    public function searchItem(Request $request){
+        $validator = Validator::make($request->all(),[
+            'search' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 422);
+        }
+
+        return  Item::where('item_name', "LIKE", "%$request->search%")->paginate(10);
     }
 
 }

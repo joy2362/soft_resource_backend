@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Enums\SettingName;
 use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+       // URL::forceScheme('https');
 
 
         view()->composer('*', function ($view)

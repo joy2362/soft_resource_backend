@@ -14,11 +14,36 @@ class itemController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $items = Item::where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())->with('category','subCategory')->get();
+
+
+        if ($request->type =='unzip'){
+            return ItemResource::collection($items);
+        }
+        if ($request->type =='zip'){
+            $response = [
+                'success' => true,
+                'date'=>date("Y-m-d"),
+                'data' => $items,
+                'message' => 'Schedule data for 3 days found',
+                'response_code'=>200,
+            ];
+
+            $responsejson=json_encode($response);
+            $data=gzencode($responsejson,9);
+
+            return response($data)->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods'=> 'GET',
+                'Content-type' => 'application/json; charset=utf-8',
+                'Content-Length'=> strlen($data),
+                'Content-Encoding' => 'gzip'
+            ]);
+        }
     }
 
     /**
