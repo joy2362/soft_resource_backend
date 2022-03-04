@@ -21,6 +21,7 @@ class SettingController extends Controller
         $app_mobile = Setting::select('value')->where('name',SettingName::APP_MOBILE())->first();
         $app_declaimer = Setting::select('value')->where('name',SettingName::APP_DECLAIMER())->first();
         $about_us = Setting::select('value')->where('name',SettingName::ABOUT_US())->first();
+        $quote = Setting::select('value')->where('name',SettingName::QUOTE())->first();
 
         return view('admin.pages.setting.index',[
             "App_Name" => $app_name->value,
@@ -28,7 +29,9 @@ class SettingController extends Controller
             "App_Mobile" => $app_mobile->value,
             "App_Email" => $app_email->value,
             "App_Declaimer" => $app_declaimer->value,
-            "About_Us" => $about_us->value,]);
+            "About_Us" => $about_us->value,
+            "quote" => $quote->value,
+            ]);
     }
 
     public function change_logo(Request $request){
@@ -61,6 +64,7 @@ class SettingController extends Controller
             'phone' => 'required',
             'about_us' => 'required',
             'declaimer' => 'required',
+            'quote' => 'required',
         ]);
 
         Setting::where('name',SettingName::APP_NAME())->update([
@@ -81,6 +85,10 @@ class SettingController extends Controller
 
         Setting::where('name',SettingName::APP_DECLAIMER())->update([
             'value' => $request->input('declaimer')
+        ]);
+
+        Setting::where('name',SettingName::QUOTE())->update([
+            'value' => $request->input('quote')
         ]);
 
         $notification = array(

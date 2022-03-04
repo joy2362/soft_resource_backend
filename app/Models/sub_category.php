@@ -17,7 +17,7 @@ class sub_category extends Model
 
     use HasFactory;
 
-    protected $with = ['created_by','updated_by','deleted_by','items'];
+   // protected $with = ['items'];
 
     /**
      *

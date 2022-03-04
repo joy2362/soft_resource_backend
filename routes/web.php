@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RoleControlelr;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Models\Category;
 
@@ -24,7 +25,7 @@ use App\Models\Category;
 Route::get('/',  [AdminController::class, 'dashboard'])->name('home');
 
 Route::resource('category', CategoryController::class,array('except'=>['create','show']));
-Route::resource('item', ItemController::class,array('except'=>['create','show']));
+Route::resource('item', ItemController::class,array('except'=>['show']));
 Route::resource('sub-category', SubCategoryController::class,array('except'=>['create','show']));
 Route::resource('role', RoleControlelr::class,array('except'=>['create','show']));
 Route::resource('user', UserController::class,array('except'=>['create','show']));
@@ -38,3 +39,6 @@ Route::get('/profile/setting/recovery-codes', [AdminController::class, 'recovery
 Route::get('/profile/edit',[AdminController::class, 'profile_edit'])->name('profile.edit');
 Route::put('/profile-image', [AdminController::class, 'image_update'])->name('profile-image.update');
 Route::get('/two-factor-recover',  [AdminController::class, 'two_factor_recover']);
+Route::get('/storage/link',  function (){
+    Artisan::call('storage:link');
+});

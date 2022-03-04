@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+
 class Item extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
     protected $appends = ['image'];
-    protected $with = ['download', 'created_by', 'updated_by', 'deleted_by'];
+    //protected $with = ['download','category'];
     protected $guarded = [];
 
     public function registerMediaCollections(): void
@@ -35,9 +36,6 @@ class Item extends Model implements HasMedia
         return $this->download()->count();
     }
 
-    /**
-     *
-     */
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -48,7 +46,7 @@ class Item extends Model implements HasMedia
         return $this->belongsTo(sub_category::class);
     }
 
-    public function created_by()
+    public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }

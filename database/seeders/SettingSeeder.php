@@ -68,5 +68,16 @@ class SettingSeeder extends Seeder
             ]
         );
 
+        Setting::updateOrCreate(
+            [
+                'name' => SettingName::QUOTE(),
+            ],
+            [
+                'name' => SettingName::QUOTE(),
+                'value' => "The purpose of our lives is to be happy",
+
+            ]
+        );
+
     }
 }

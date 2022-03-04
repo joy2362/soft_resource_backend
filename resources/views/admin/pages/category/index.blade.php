@@ -25,11 +25,6 @@
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="name" name="name" required>
                                 </div>
-
-                                <div class="form-group mb-3">
-                                    <label for="logo" class="form-label">Category logo</label>
-                                    <input class="form-control" type="file" id="logo" name="logo" accept="image/*" required>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -68,15 +63,6 @@
                                         Inactive
                                     </label>
                                 </div>
-                                <div  class="form-group mb-3">
-                                    <label >Current  logo</label><br>
-                                    <img src="" width="100px" height="100px" alt="image" id="current_logo">
-
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="edit_logo" class="form-label">Category logo</label>
-                                    <input class="form-control" type="file" id="edit_logo" name="logo" accept="image/*">
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -100,7 +86,6 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Logo</th>
                                         <th>Total Sub-category</th>
                                         <th>Added By</th>
                                         <th>Status</th>
@@ -149,7 +134,6 @@
                     columns:[
                         {data:"id",name:'ID'},
                         {data:"category_name",name:'Name'},
-                        {data:"logo",name:'Logo'},
                         {data:"NumberOfSubCategory",name:'Total Sub-category'},
                         {data:"created_by.name",name:'Added By'},
                         {data:"status",name:'status'},
@@ -178,7 +162,6 @@
                             }else{
                                 $("#edit_status_inactive").prop("checked", true);
                             }
-                            $("#current_logo").attr("src",  response.category.logo );
                         }
                     }
                 })
@@ -213,14 +196,17 @@
                             $('#save_errorList').addClass("d-none");
 
                             $('#addCategoryForm').find('input[name="name"]').val('');
-                            $('#addCategoryForm').find('input[name="logo"]').val('');
                             $('#add_Category').modal('hide');
 
                             $('#datatable1').DataTable().draw();
-                            Swal.fire(
-                                'Success!',
-                                response.message,
-                                'success'
+                            Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    toast:true
+                            }
                             )
 
                         }
@@ -260,10 +246,14 @@
                             $('#editCategoryForm').find('input[name="logo"]').val('');
                             $('#edit_category').modal('hide');
                             $('#datatable1').DataTable().draw();
-                            Swal.fire(
-                                'Success!',
-                                response.message,
-                                'success'
+                            Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    toast:true
+                                }
                             )
 
                         }
@@ -293,18 +283,26 @@
                             dataType:'json',
                             success: function(response){
                                 if(response.status == 404){
-                                    Swal.fire(
-                                        'Error!',
-                                        response.message,
-                                        'error'
+                                    Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'error',
+                                            title: response.message,
+                                            showConfirmButton: false,
+                                            timer: 1500,
+                                            toast:true
+                                        }
                                     )
                                 }
                                 else{
                                     $('#datatable1').DataTable().draw();
-                                    Swal.fire(
-                                        'Deleted!',
-                                        response.message,
-                                        'success'
+                                    Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'success',
+                                            title: response.message,
+                                            showConfirmButton: false,
+                                            timer: 1500,
+                                            toast:true
+                                        }
                                     )
                                 }
                             }

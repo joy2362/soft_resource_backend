@@ -28,33 +28,21 @@ class ItemController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function index(Request $request){
-        if ($request->ajax()){
-            $items = Item::where('is_deleted',DeleteStatus::NO())->with('category','created_by')->get();
-            $data = DataTables::of($items)
-                ->addIndexColumn()
-                ->addColumn('actions',function($row){
-                    if(auth()->user()->hasPermissionTo('edit item') || auth()->user()->hasRole('Super Admin')){
-                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" value="'.$row->id.'">Edit</button>';
-                    }else{
-                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" disabled value="'.$row->id.'">Edit</button>';
-                    }
-                    if(auth()->user()->hasPermissionTo('delete item') || auth()->user()->hasRole('Super Admin')){
-                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" value="'.$row->id.'">Delete</button>';
-                    }else{
-                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" disabled value="'.$row->id.'">Delete</button>';
-                    }
-                        return $btn;
-                })
-                ->rawColumns(['actions'])
-                ->make(true);
-            return $data;
-        }
+    public function index(){
+        $items = Item::where('is_deleted',DeleteStatus::NO())->with('category','download','createdBy')->get();
         $category = Category::where('is_deleted',DeleteStatus::NO())->where('status',CategoryStatus::ACTIVE())->get();
-
-        return view('admin.pages.item.index',['category'=>$category]);
+        return view('admin.pages.item.index',['category'=>$category,'items'=>$items]);
     }
-
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $category = Category::where('is_deleted',DeleteStatus::NO())->where('status',CategoryStatus::ACTIVE())->get();
+        return view('admin.pages.item.add',['category'=>$category]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -65,7 +53,7 @@ class ItemController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'required|max:191',
             'category' => 'required',
-            'sub_category' => 'nullable',
+            'sub_category' => 'required',
             'release_date' => 'nullable|date',
             'description' => 'nullable|max:5000',
             'rating' => 'nullable',
@@ -78,8 +66,7 @@ class ItemController extends Controller
                 'errors' => $validator->messages()
             ]);
         }
-
-
+        
         $item = new Item();
         $item->item_name = $request->name;
         $item->release_date = $request->release_date;
@@ -107,21 +94,19 @@ class ItemController extends Controller
                 ]
             );
         }
+        $notification = array(
+            'messege' => 'Item added Successfully!',
+            'alert-type' => 'success'
+        );
 
-        return response()->json([
-            'status' => 200,
-            'message' => "Item Added Successfully"
-        ]);
-
+        return Redirect()->back()->with($notification);
     }
 
     public function edit(Item $item){
-        $subcategory = sub_category::where('category_id',$item->category_id)->get();
-        return response()->json([
-            'status' => 200,
-            'item' => $item,
-            'subcategory'=>$subcategory
-        ]);
+        $selectedItem = Item::where('is_deleted',DeleteStatus::NO())->where("id",$item->id)->with('category','download','createdBy')->first();
+        $category = Category::where('is_deleted',DeleteStatus::NO())->where('status',CategoryStatus::ACTIVE())->get();
+        $subcategory = sub_category::where('category_id',$item->category_id)->where('is_deleted',DeleteStatus::NO())->get();
+        return view('admin.pages.item.edit',['category'=>$category,'item'=>$selectedItem,'subcategory'=>$subcategory]);
     }
 
     public function update(Request $request,Item $item)
@@ -162,7 +147,7 @@ class ItemController extends Controller
         }
 
         $item->download()->delete();
-
+        //dd($request->link);
         for($i = 0;$i<count($request->type);$i++){
             $item->download()->updateOrCreate([
                     "type" => $request->type[$i],
@@ -171,11 +156,12 @@ class ItemController extends Controller
                 ],["link" => $request->link[$i]]
             );
         }
+        $notification = array(
+            'messege' => 'Item Update Successfully!',
+            'alert-type' => 'success'
+        );
 
-        return response()->json([
-            'status' => 200,
-            'message' => "Item Update Successfully"
-        ]);
+        return Redirect()->back()->with($notification);
 
     }
 
@@ -194,10 +180,12 @@ class ItemController extends Controller
             'status' => ItemStatus::INACTIVE(),
         ]);
 
-        return response()->json([
-            'status' => 200,
-            'message' => "Item Deleted successfully"
-        ]);
+        $notification = array(
+            'messege' => 'Item delete Successfully!',
+            'alert-type' => 'success'
+        );
+
+        return Redirect()->route('item.index')->with($notification);
     }
 
 

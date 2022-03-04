@@ -22,7 +22,7 @@ class CategoryController extends Controller
 
     public function index(Request $request){
         if ($request->ajax()){
-            $category = Category::where('is_deleted',DeleteStatus::NO())->get();
+            $category = Category::where('is_deleted',DeleteStatus::NO())->with('created_by')->get();
             $data = DataTables::of($category)
                 ->addIndexColumn()
                 ->addColumn('logo',function($row){
@@ -61,7 +61,6 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name' => 'required|max:191| unique:categories,category_name',
-            'logo' => 'required|image|mimes:jpg,jpeg,png',
         ]);
 
         if ($validator->fails()){
@@ -78,10 +77,6 @@ class CategoryController extends Controller
         $category->slug = $slug;
         $category->created_by = Auth::id();
         $category->save();
-
-        if ($request->has('logo')) {
-            $category->addMedia($request->file('logo'))->toMediaCollection('logo');
-        }
 
         return response()->json([
             'status' => 200,
@@ -118,10 +113,6 @@ class CategoryController extends Controller
         $category->status = $request->status;
 
         $category->save();
-
-        if ($request->hasFile('logo')){
-            $category->addMedia($request->file('logo'))->toMediaCollection('logo');
-        }
 
         return response()->json([
             'status' => 200,

@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Category extends Model implements HasMedia
+class Category extends Model
 {
-    use HasFactory,InteractsWithMedia;
+    use HasFactory;
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['logo','NumberOfSubCategory','numberOfItems'];
+    protected $appends = ['NumberOfSubCategory','numberOfItems'];
 
 
     /**
@@ -29,22 +29,7 @@ class Category extends Model implements HasMedia
      *
      * @var array
      */
-    protected $with = ['deleted_by','created_by','sub_category','updated_by','items'];
-    /**
-     * Register the media collections
-     *
-     * @return void
-     */
-    public function registerMediaCollections(): void
-    {
-            $this->addMediaCollection('logo')->singleFile();
-    }
-
-    public function getLogoAttribute()
-    {
-        return $this->getFirstMediaUrl('logo');
-    }
-
+    //protected $with = ['items'];
 
     public function created_by()
     {

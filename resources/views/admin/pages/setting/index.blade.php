@@ -108,6 +108,15 @@
                                             </span>
                                         @enderror
                                     </div>
+                                    <div class="form-group g-2 mb-3">
+                                        <label for="quote">Quote</label>
+                                        <input type="text" class="form-control"  id="quote" name="quote" required value="{{$quote}}">
+                                        @error('quote')
+                                        <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                     @can('edit setting')
                                         <button type="submit" class="btn btn-sm btn-success mt-1"> Update</button>
                                     @endcan

@@ -15,6 +15,7 @@ class AdminController extends Controller
     }
 
     public function dashboard(){
+        //return request()->server('HTTP_USER_AGENT');
        return view('admin.pages.dashboard');
     }
 

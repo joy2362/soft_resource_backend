@@ -18,32 +18,10 @@ class itemController extends Controller
      */
     public function index(Request $request)
     {
-        $items = Item::where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())->with('category','subCategory')->get();
+        $items = Item::where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
 
-
-        if ($request->type =='unzip'){
-            return ItemResource::collection($items);
-        }
-        if ($request->type =='zip'){
-            $response = [
-                'success' => true,
-                'date'=>date("Y-m-d"),
-                'data' => $items,
-                'message' => 'Schedule data for 3 days found',
-                'response_code'=>200,
-            ];
-
-            $responsejson=json_encode($response);
-            $data=gzencode($responsejson,9);
-
-            return response($data)->withHeaders([
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Methods'=> 'GET',
-                'Content-type' => 'application/json; charset=utf-8',
-                'Content-Length'=> strlen($data),
-                'Content-Encoding' => 'gzip'
-            ]);
-        }
+        return ItemResource::collection($items);
     }
 
     /**
@@ -75,7 +53,8 @@ class itemController extends Controller
      */
     public function show(Item $item)
     {
-        return new ItemResource($item);
+        $selectedItem = Item::where('is_deleted',DeleteStatus::NO())->where("id",$item->id)->with('category','download','created_by')->first();
+        return new ItemResource($selectedItem);
     }
 
     /**
@@ -113,12 +92,26 @@ class itemController extends Controller
     }
 
     public function requestedItem(){
-        $item = Item::where('is_deleted',DeleteStatus::NO())->where('is_requested',1)->where('status',ItemStatus::ACTIVE())->get();
+        $item = Item::where('is_deleted',DeleteStatus::NO())->where('is_requested',1)->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
         return ItemResource::collection($item);
     }
 
     public function sliderItem(){
-        $item = Item::where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())->where('is_slider',1)->get();
+        $item = Item::where('is_deleted',DeleteStatus::NO())->where('is_slider',1)->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
+        return ItemResource::collection($item);
+    }
+
+    public function itemByCategory($id){
+        $item = Item::where('category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
+        return ItemResource::collection($item);
+    }
+
+    public function itemBySubCategory($id){
+        $item = Item::where('sub_category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
         return ItemResource::collection($item);
     }
 }

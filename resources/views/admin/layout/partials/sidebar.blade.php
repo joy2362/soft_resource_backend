@@ -31,7 +31,7 @@
             </li>
             @endcan
             @can("view item")
-            <li class="sidebar-item {{ request()->routeIs('item.index') ? 'active' : '' }}">
+            <li class="sidebar-item {{ request()->routeIs('item.*') ? 'active' : '' }}">
                 <a class="sidebar-link" href="{{ route('item.index') }}">
                     <i class="align-middle" data-feather="file"></i> <span class="align-middle">Item</span>
                 </a>

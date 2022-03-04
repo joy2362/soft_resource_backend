@@ -173,6 +173,7 @@
                         if(response.status === 200){
                             $('#edit_id').val(response.sub_Category.id);
                             $('#edit_name').val(response.sub_Category.sub_category_name);
+
                             $('#edit_category').val(response.sub_Category.category_id);
 
                             if(response.sub_Category.status === 'active'){
@@ -215,10 +216,14 @@
                             $('#add_Sub_Category').modal('hide');
 
                             $('#datatable1').DataTable().draw();
-                            Swal.fire(
-                                'Success!',
-                                response.message,
-                                'success'
+                            Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    toast:true
+                                }
                             )
 
                         }
@@ -255,12 +260,17 @@
                             $('#editSubCategoryForm').find('input[name="name"]').val('');
                             $('#editSubCategoryForm').find('input[name="category"]').val('');
 
-                            $('#edit_sub_category').modal('hide');
+                            $('#edit_Sub_category').modal('hide');
                             $('#datatable1').DataTable().draw();
-                            Swal.fire(
-                                'Success!',
-                                response.message,
-                                'success'
+
+                            Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    toast:true
+                                }
                             )
 
                         }
@@ -289,19 +299,27 @@
                             url:"/sub-category/"+id,
                             dataType:'json',
                             success: function(response){
-                                if(response.status == 404){
-                                    Swal.fire(
-                                        'Error!',
-                                        response.message,
-                                        'error'
+                                if(response.status === 404){
+                                    Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'error',
+                                            title: response.message,
+                                            showConfirmButton: false,
+                                            timer: 1500,
+                                            toast:true
+                                        }
                                     )
                                 }
                                 else{
                                     $('#datatable1').DataTable().draw();
-                                    Swal.fire(
-                                        'Deleted!',
-                                        response.message,
-                                        'success'
+                                    Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'success',
+                                            title: response.message,
+                                            showConfirmButton: false,
+                                            timer: 1500,
+                                            toast:true
+                                        }
                                     )
                                 }
                             }

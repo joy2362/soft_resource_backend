@@ -19,6 +19,8 @@ class ApiController extends Controller
         $app_mobile = Setting::select('value')->where('name',SettingName::APP_MOBILE())->first();
         $app_declaimer = Setting::select('value')->where('name',SettingName::APP_DECLAIMER())->first();
         $about_us = Setting::select('value')->where('name',SettingName::ABOUT_US())->first();
+        $quote = Setting::select('value')->where('name',SettingName::QUOTE())->first();
+
        return response()->json([
            "App_Name" => $app_name->value,
            "App_logo" => $app_name->Applogo,
@@ -26,6 +28,7 @@ class ApiController extends Controller
            "App_Email" => $app_email->value,
            "App_Declaimer" => $app_declaimer->value,
            "About_Us" => $about_us->value,
+           "Quote" => $quote->value,
        ]);
     }
 
