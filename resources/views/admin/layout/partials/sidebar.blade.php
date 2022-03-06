@@ -65,6 +65,16 @@
                 </a>
             </li>
             @endcan
+            @if(auth()->user()->hasRole('Super Admin'))
+                <li class="sidebar-header">
+                    Recover
+                </li>
+                <li class="sidebar-item {{ request()->routeIs('recycle-bin.index') ? 'active' : '' }}">
+                    <a class="sidebar-link" href="{{ route('recycle-bin.index') }}">
+                        <i class="align-middle" data-feather="trash-2"></i> <span class="align-middle">Recycle Bin</span>
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </nav>

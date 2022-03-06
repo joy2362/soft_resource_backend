@@ -6,9 +6,9 @@
     <main class="content">
         <div class="container-fluid p-0">
             <h1 class="h3 mb-3">Admin
-                @can('create admin')
+                @if(auth()->user()->hasRole('Super Admin'))
                 <a href="#" class="float-end btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#add_Admin">Add Admin</a>
-                @endcan
+                @endif
             </h1>
             <!-- Modal for add  -->
             <div class="modal fade" id="add_Admin" tabindex="-1" aria-labelledby="add_admin_Label" aria-hidden="true">
@@ -88,7 +88,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -102,9 +101,6 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-
-                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-border" id="datatable1">

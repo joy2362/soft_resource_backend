@@ -31,7 +31,7 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request){
         if ($request->ajax()){
-            $subCategory = sub_category::where('is_deleted',DeleteStatus::NO())->with('category','created_by')->get();
+            $subCategory = sub_category::where('is_deleted',DeleteStatus::NO())->with('category','createdBy')->get();
             $data = DataTables::of($subCategory)
                 ->addIndexColumn()
                 ->addColumn('actions',function($row){
@@ -129,7 +129,6 @@ class SubCategoryController extends Controller
      */
     public function destroy($id)
     {
-
         $sub_Category = sub_category::find($id);
 
         $sub_Category->deleted_by = Auth::id();;
@@ -140,7 +139,7 @@ class SubCategoryController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => "Category Deleted successfully"
+            'message' => "Sub Category Deleted successfully"
         ]);
     }
 

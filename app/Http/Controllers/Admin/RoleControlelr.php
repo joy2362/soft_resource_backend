@@ -13,6 +13,13 @@ use Yajra\DataTables\DataTables;
 class RoleControlelr extends Controller
 {
     /**
+     *
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:web');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response

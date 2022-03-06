@@ -22,7 +22,7 @@ class CategoryController extends Controller
 
     public function index(Request $request){
         if ($request->ajax()){
-            $category = Category::where('is_deleted',DeleteStatus::NO())->with('created_by')->get();
+            $category = Category::where('is_deleted',DeleteStatus::NO())->with('createdBy')->get();
             $data = DataTables::of($category)
                 ->addIndexColumn()
                 ->addColumn('logo',function($row){
