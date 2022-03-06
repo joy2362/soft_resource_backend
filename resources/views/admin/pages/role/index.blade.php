@@ -6,9 +6,9 @@
     <main class="content">
         <div class="container-fluid p-0">
             <h1 class="h3 mb-3">Role
-                @can('create role')
-                <a href="#" class="float-end btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#add_Role">Add Role</a>
-                @endcan
+                @if(auth()->user()->hasRole('Super Admin'))
+                <a href="{{route('role.create')}}" class="float-end btn btn-sm btn-success" >Add Role</a>
+                @endif
             </h1>
             <!-- Modal for add  -->
             <div class="modal fade" id="add_Role" tabindex="-1" aria-labelledby="add_role_Label" aria-hidden="true">
@@ -85,12 +85,10 @@
                 </div>
             </div>
             <!--end Modal for update  -->
+
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-
-                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-border" id="datatable1">
@@ -103,7 +101,32 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @foreach($roles as $row)
+                                        <tr>
+                                            <td>{{$row->id}}</td>
+                                            <td>{{$row->name}}</td>
+                                            <td>{{$row->guard_name}}</td>
 
+                                            <td>
+                                                @if($row->name != 'Super Admin')
+                                                <form action="{{route('role.destroy',$row->id)}}" method="post">
+
+                                                    @if(auth()->user()->hasRole('Super Admin'))
+                                                        <a class="m-2 btn btn-sm btn-success" href="{{route('role.edit',$row->id)}}">Edit</a>
+                                                    @endif
+
+                                                    @if(auth()->user()->hasRole('Super Admin'))
+                                                        <button class="m-2 btn btn-sm btn-danger delete_button" type="submit" value="{{$row->id}}" >Delete</button>
+                                                    @endif
+
+                                                    @method('delete')
+                                                    @csrf
+                                                </form>
+                                                @endif
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -119,6 +142,8 @@
 @section('script')
     <script>
         $(document).ready(function(){
+            $('#datatable1').DataTable({});
+
             function ajaxsetup(){
                 $.ajaxSetup({
                     headers: {
@@ -127,28 +152,6 @@
                 });
             }
 
-            fetchBrand();
-            function fetchBrand(){
-                ajaxsetup();
-                $('#datatable1').DataTable({
-                    responsive: true,
-                    language: {
-                        searchPlaceholder: 'Search...',
-                        sSearch: '',
-                        lengthMenu: '_MENU_ items/page',
-                    },
-
-                    processing: true,
-                    serverSide:true,
-                    ajax:"{{route('role.index')}}",
-                    columns:[
-                        {data:"id",name:'ID'},
-                        {data:"name",name:'Name'},
-                        {data:"guard_name",name:'Guard'},
-                        {data:"actions",name:'Actions'},
-                    ]
-                });
-            }
 
             $(document).on('click','.edit_button',function(e){
                 e.preventDefault();
@@ -262,6 +265,7 @@
 
             $(document).on('click','.delete_button',function(e){
                 e.preventDefault();
+                var form =  $(this).closest("form");
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -272,30 +276,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        let id = $(this).val();
-                        ajaxsetup();
-                        $.ajax({
-                            type:'DELETE',
-                            url:"/role/"+id,
-                            dataType:'json',
-                            success: function(response){
-                                if(response.status == 404){
-                                    Swal.fire(
-                                        'Error!',
-                                        response.message,
-                                        'error'
-                                    )
-                                }
-                                else{
-                                    $('#datatable1').DataTable().draw();
-                                    Swal.fire(
-                                        'Deleted!',
-                                        response.message,
-                                        'success'
-                                    )
-                                }
-                            }
-                        })
+                        form.submit();
                     }
                 })
             });

@@ -189,12 +189,6 @@
                                     <input class="form-check-input" type="checkbox" id="is_requested" name="is_requested" value="true" @if($item->is_requested){{'checked'}}@endif>
                                     <label class="form-check-label" for="is_requested">Requested</label>
                                 </div>
-
-                                <div class="form-check form-check-inline">
-
-                                    <input class="form-check-input" type="checkbox" id="is_slider" name="is_slider" value="true" @if($item->is_slider){{'checked'}} @endif>
-                                    <label class="form-check-label" for="is_slider">Slider</label>
-                                </div>
                                </div>
                                 <div class="form-group mb-3">
                                     <label  class="form-label mr-2">Status: </label>

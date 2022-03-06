@@ -63,11 +63,6 @@
                                     <label class="form-check-label" for="is_requested">Requested</label>
                                 </div>
 
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="is_slider" name="is_slider" value="true">
-                                    <label class="form-check-label" for="is_slider">Slider</label>
-                                </div>
-
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="item-table">
                                         <tr>

@@ -52,7 +52,7 @@
                 Admin
             </li>
             @can('view role')
-            <li class="sidebar-item {{ request()->routeIs('role.index') ? 'active' : '' }}">
+            <li class="sidebar-item {{ request()->routeIs('role.*') ? 'active' : '' }}">
                 <a class="sidebar-link" href="{{ route('role.index') }}">
                     <i class="align-middle" data-feather="check"></i> <span class="align-middle">Role</span>
                 </a>

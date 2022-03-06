@@ -97,12 +97,6 @@ class itemController extends Controller
         return ItemResource::collection($item);
     }
 
-    public function sliderItem(){
-        $item = Item::where('is_deleted',DeleteStatus::NO())->where('is_slider',1)->where('status',ItemStatus::ACTIVE())
-            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
-        return ItemResource::collection($item);
-    }
-
     public function itemByCategory($id){
         $item = Item::where('category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
             ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();

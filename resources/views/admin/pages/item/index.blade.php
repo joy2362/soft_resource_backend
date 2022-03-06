@@ -153,17 +153,19 @@
                                                     @endif
                                                 </td>
                                                 <td>
-
-
                                                     <form action="{{route('item.destroy',$row->id)}}" method="post">
+
+                                                        @if(auth()->user()->hasPermissionTo('edit item') || auth()->user()->hasRole('Super Admin'))
                                                         <a class="m-2 btn btn-sm btn-success" href="{{route('item.edit',$row->id)}}">Edit</a>
+                                                        @endif
+
                                                         @if(auth()->user()->hasPermissionTo('delete item') || auth()->user()->hasRole('Super Admin'))
                                                         <button class="m-2 btn btn-sm btn-danger delete_button" type="submit" value="{{$row->id}}" >Delete</button>
                                                         @endif
-                                                            @method('delete')
+
+                                                        @method('delete')
                                                         @csrf
                                                     </form>
-
                                                 </td>
                                             </tr>
                                         @endforeach

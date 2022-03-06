@@ -34,14 +34,7 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'edit setting']);
 
         Permission::create(['name' => 'view admin']);
-        Permission::create(['name' => 'create admin']);
-        Permission::create(['name' => 'delete admin']);
-        Permission::create(['name' => 'edit admin']);
-
         Permission::create(['name' => 'view role']);
-        Permission::create(['name' => 'create role']);
-        Permission::create(['name' => 'delete role']);
-        Permission::create(['name' => 'edit role']);
 
         Role::create(['name' => 'Super Admin']);
 

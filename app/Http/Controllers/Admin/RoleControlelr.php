@@ -19,60 +19,34 @@ class RoleControlelr extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()){
-            $role = Role::all();
-            $data = DataTables::of($role)
-                ->addIndexColumn()
-
-                ->addColumn('actions',function($row){
-                    if(auth()->user()->hasPermissionTo('edit role') || auth()->user()->hasRole('Super Admin')){
-                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" value="'.$row->id.'">Edit</button>';
-                    }else{
-                        $btn =  '<button class="m-2 btn btn-sm btn-primary edit_button" disabled value="'.$row->id.'">Edit</button>';
-                    }
-                    if(auth()->user()->hasPermissionTo('delete role') || auth()->user()->hasRole('Super Admin')){
-                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" value="'.$row->id.'">Delete</button>';
-                    }else{
-                        $btn.=  '<button class="m-2 btn btn-sm btn-danger delete_button" disabled value="'.$row->id.'">Delete</button>';
-                    }
-                        return $btn;
-                })
-                ->rawColumns(['actions'])
-                ->make(true);
-            return $data;
-        }
+        $role = Role::all();
         $permissions = Permission::all();
-        return view('admin.pages.role.index',['permissions'=>$permissions]);
+        return view('admin.pages.role.index',['permissions'=>$permissions,'roles'=>$role]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        $role = Role::all();
+        $permissions = Permission::all();
+        return view('admin.pages.role.add',['permissions' => $permissions,'roles'=> $role]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
-            'name' => 'required|max:191',
+        $request->validate([
+            'name' => 'required|max:255|unique:roles',
         ]);
-
-        if ($validator->fails()){
-            return response()->json([
-                'status' => 400,
-                'errors' => $validator->messages()
-            ]);
-        }
 
         $role = Role::create([
             'name'=>$request->name,
@@ -80,10 +54,12 @@ class RoleControlelr extends Controller
 
         $role->syncPermissions($request->permissions);
 
-        return response()->json([
-            'status' => 200,
-            'message' => "Role Added Successfully"
-        ]);
+        $notification = array(
+            'messege' => 'Role added Successfully!',
+            'alert-type' => 'success'
+        );
+
+        return Redirect()->back()->with($notification);
 
     }
 
@@ -102,15 +78,12 @@ class RoleControlelr extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $role
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
      */
     public function edit(Role $role)
     {
-        return response()->json([
-            'status' => 200,
-            'role' => $role,
-            'permissions' => $role->permissions,
-        ]);
+        $permissions = Permission::all();
+        return view('admin.pages.role.edit',['permissions' => $permissions,'role'=> $role]);
     }
 
     /**
@@ -118,20 +91,13 @@ class RoleControlelr extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Role $role)
     {
-        $validator = Validator::make($request->all(),[
-            'name' => 'required|max:191',
+        $request->validate([
+            'name' => 'required|max:255|unique:roles,name,'.$role->name,
         ]);
-
-        if ($validator->fails()){
-            return response()->json([
-                'status' => 400,
-                'errors' => $validator->messages()
-            ]);
-        }
 
         $users = User::role($role->name)->get();
 
@@ -143,27 +109,32 @@ class RoleControlelr extends Controller
         $role->save();
         $role->syncPermissions($request->permissions);
 
-        return response()->json([
-            'status' => 200,
-            'message' => "Role Update Successfully"
-        ]);
+        $notification = array(
+            'messege' => 'Role Update Successfully!',
+            'alert-type' => 'success'
+        );
+
+        return Redirect()->back()->with($notification);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Role $role)
     {
         $role->revokePermissionTo(Permission::all());
 
         $role->delete();
-        return response()->json([
-            'status' => 200,
-            'message' => "Role Delete Successfully"
-        ]);
+
+        $notification = array(
+            'messege' => 'Role Delete Successfully!',
+            'alert-type' => 'success'
+        );
+
+        return Redirect()->back()->with($notification);
 
     }
 }

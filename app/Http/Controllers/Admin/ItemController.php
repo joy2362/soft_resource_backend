@@ -50,7 +50,7 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $request->validate([
             'name' => 'required|max:191',
             'category' => 'required',
             'sub_category' => 'required',
@@ -60,13 +60,6 @@ class ItemController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
 
-        if ($validator->fails()){
-            return response()->json([
-                'status' => 400,
-                'errors' => $validator->messages()
-            ]);
-        }
-        
         $item = new Item();
         $item->item_name = $request->name;
         $item->release_date = $request->release_date;
@@ -76,7 +69,6 @@ class ItemController extends Controller
         $item->sub_category_id = $request->sub_category;
 
         $item->is_requested = (bool)$request->is_requested;
-        $item->is_slider = (bool)$request->is_slider;
 
         $item->created_by = Auth::id();
         $item->save();
@@ -136,7 +128,6 @@ class ItemController extends Controller
         $item->sub_category_id = $request->sub_category;
 
         $item->is_requested = (bool)$request->is_requested;
-        $item->is_slider = (bool)$request->is_slider;
         $item->status = $request->status;
 
         $item->updated_by = Auth::id();
@@ -147,7 +138,6 @@ class ItemController extends Controller
         }
 
         $item->download()->delete();
-        //dd($request->link);
         for($i = 0;$i<count($request->type);$i++){
             $item->download()->updateOrCreate([
                     "type" => $request->type[$i],

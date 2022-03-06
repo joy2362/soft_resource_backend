@@ -20,7 +20,6 @@ class CreateItemsTable extends Migration
             $table->text('item_description')->nullable();
             $table->decimal('item_rating',4,2)->nullable();
             $table->boolean('is_requested')->nullable();
-            $table->boolean('is_slider')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('sub_category_id')->nullable();
 
