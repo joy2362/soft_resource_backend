@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Item;
+use App\Models\sub_category;
+use App\Models\Tracker;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +19,32 @@ class AdminController extends Controller
     }
 
     public function dashboard(){
-        //return request()->server('HTTP_USER_AGENT');
-       return view('admin.pages.dashboard');
+        $lineChart = Tracker::select(\DB::raw("COUNT(*) as count"), \DB::raw("MONTHNAME(created_at) as month_name"),\DB::raw('max(created_at) as createdAt'))
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month_name')
+            ->orderBy('createdAt')
+            ->get();
+
+        $hitCount = Tracker::select(\DB::raw("sum(hits) as count"), \DB::raw("MONTHNAME(created_at) as month_name"),\DB::raw('max(created_at) as createdAt'))
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month_name')
+            ->orderBy('createdAt')
+            ->get();
+        $visitors = Tracker::totalVisitor();
+        $totalHit = Tracker::totalHits();
+        $recentVisit = Tracker::totalRecentVisit(10);
+        $category= Category::all()->count();
+        $subCategory= sub_category::all()->count();
+        $item= Item::all()->count();
+        $admin  = User::all()->count();
+       return view('admin.pages.dashboard',[
+           'totalHit'=>$totalHit,'category'=>$category,
+           'subCategory'=>$subCategory,'item'=>$item,
+           'admin'=>$admin,'visitors'=>$visitors,
+           'recentVisit'=>$recentVisit,
+           'lineChart'=>$lineChart,
+           'hitCount'=>$hitCount
+       ]);
     }
 
     public function image_update(Request $request){

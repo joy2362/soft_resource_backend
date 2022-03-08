@@ -7,6 +7,7 @@ use App\Enums\ItemStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemResource;
 use App\Models\Item;
+use App\Models\Tracker;
 use Illuminate\Http\Request;
 
 class itemController extends Controller
@@ -16,7 +17,7 @@ class itemController extends Controller
      *
 
      */
-    public function index(Request $request)
+    public function index()
     {
         $items = Item::where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
             ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
@@ -53,7 +54,8 @@ class itemController extends Controller
      */
     public function show(Item $item)
     {
-        $selectedItem = Item::where('is_deleted',DeleteStatus::NO())->where("id",$item->id)->with('category','download','created_by')->first();
+        Tracker::hit();
+        $selectedItem = Item::where('is_deleted',DeleteStatus::NO())->where("id",$item->id)->with('category','download','createdBy')->first();
         return new ItemResource($selectedItem);
     }
 
