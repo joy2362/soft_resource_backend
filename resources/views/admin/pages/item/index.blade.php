@@ -185,7 +185,7 @@
     <script>
         $(document).ready(function(){
 
-            $('#datatable1').DataTable({});
+            $('#datatable1').DataTable({"order": [[ 0, "desc" ]]});
 
             $(document).on('click','.delete_button',function(e){
                 e.preventDefault();

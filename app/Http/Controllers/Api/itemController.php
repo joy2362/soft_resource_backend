@@ -99,15 +99,19 @@ class itemController extends Controller
         return ItemResource::collection($item);
     }
 
-    public function itemByCategory($id){
-        $item = Item::where('category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
-            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
+    public function itemByCategory($id,Request $request){
+        if (!empty($request->perPage)){
+            return Item::where('category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+                ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->orderBy('id', 'DESC')->paginate($request->perPage);
+        }
+        $item= Item::where('category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->orderBy('id', 'DESC')->get();
         return ItemResource::collection($item);
     }
 
     public function itemBySubCategory($id){
-        $item = Item::where('sub_category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
-            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->get();
-        return ItemResource::collection($item);
+        return Item::where('sub_category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->paginate(5);
+        // return ItemResource::collection($item);
     }
 }

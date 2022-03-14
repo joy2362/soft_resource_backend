@@ -103,7 +103,7 @@ class RoleControlelr extends Controller
     public function update(Request $request, Role $role)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:roles,name,'.$role->name,
+            'name' => 'required|max:255|unique:roles,name,'.$role->id,
         ]);
 
         $users = User::role($role->name)->get();

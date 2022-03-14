@@ -7,15 +7,12 @@ use App\Enums\DeleteStatus;
 use App\Enums\ItemStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\DownloadLink;
 use App\Models\Item;
 use App\Models\sub_category;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Yajra\DataTables\DataTables;
+
 
 class ItemController extends Controller
 {
@@ -140,10 +137,10 @@ class ItemController extends Controller
         $item->download()->delete();
         for($i = 0;$i<count($request->type);$i++){
             $item->download()->updateOrCreate([
-                    "type" => $request->type[$i],
-                    "label" => $request->link_label[$i],
-                    "updated_by" => Auth::id(),
-                ],["link" => $request->link[$i]]
+                "type" => $request->type[$i],
+                "label" => $request->link_label[$i],
+                "updated_by" => Auth::id(),
+            ],["link" => $request->link[$i]]
             );
         }
         $notification = array(
@@ -177,6 +174,4 @@ class ItemController extends Controller
 
         return Redirect()->route('item.index')->with($notification);
     }
-
-
 }

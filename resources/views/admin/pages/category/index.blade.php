@@ -121,6 +121,7 @@
             function fetchBrand(){
                 ajaxsetup();
                 $('#datatable1').DataTable({
+                    "order": [[ 0, "desc" ]],
                     responsive: true,
                     language: {
                         searchPlaceholder: 'Search...',
