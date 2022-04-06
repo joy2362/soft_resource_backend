@@ -109,8 +109,15 @@ class itemController extends Controller
         return ItemResource::collection($item);
     }
 
-    public function itemBySubCategory($id){
-        return Item::where('sub_category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
-            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->paginate(5);
+    public function itemBySubCategory($id,Request $request){
+       // dd($request->perPage);
+        if (!empty($request->perPage)){
+            return Item::where('sub_category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+                ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->orderBy('id', 'DESC')->paginate($request->perPage);
+        }
+
+        $item= Item::where('sub_category_id',$id)->where('is_deleted',DeleteStatus::NO())->where('status',ItemStatus::ACTIVE())
+            ->with(['category:id,category_name' ,'subCategory:id,sub_category_name','download'])->orderBy('id', 'DESC')->get();
+        return ItemResource::collection($item);
     }
 }

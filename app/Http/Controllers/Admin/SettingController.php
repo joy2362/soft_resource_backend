@@ -21,6 +21,7 @@ class SettingController extends Controller
         $app_mobile = Setting::select('value')->where('name',SettingName::APP_MOBILE())->first();
         $app_declaimer = Setting::select('value')->where('name',SettingName::APP_DECLAIMER())->first();
         $about_us = Setting::select('value')->where('name',SettingName::ABOUT_US())->first();
+        $acknowledge = Setting::select('value')->where('name',SettingName::ACKNOWLEDGE())->first();
         $quote = Setting::select('value')->where('name',SettingName::QUOTE())->first();
 
         return view('admin.pages.setting.index',[
@@ -29,6 +30,7 @@ class SettingController extends Controller
             "App_Mobile" => $app_mobile->value,
             "App_Email" => $app_email->value,
             "App_Declaimer" => $app_declaimer->value,
+            "Acknowledge" => $acknowledge->value,
             "About_Us" => $about_us->value,
             "quote" => $quote->value,
             ]);
@@ -45,16 +47,12 @@ class SettingController extends Controller
             $setting->addMedia($request->file('image'))->toMediaCollection('app_logo');
         }
 
-
-
         $notification = array(
             'messege' => 'Application Logo Changed Successfully!',
             'alert-type' => 'success'
         );
 
         return Redirect()->back()->with($notification);
-
-
     }
 
     public function update(Request $request){
@@ -87,6 +85,10 @@ class SettingController extends Controller
             'value' => $request->input('declaimer')
         ]);
 
+        Setting::where('name',SettingName::ACKNOWLEDGE())->update([
+            'value' => $request->input('acknowledge')
+        ]);
+
         Setting::where('name',SettingName::QUOTE())->update([
             'value' => $request->input('quote')
         ]);
@@ -97,6 +99,5 @@ class SettingController extends Controller
         );
 
         return Redirect()->back()->with($notification);
-
     }
 }

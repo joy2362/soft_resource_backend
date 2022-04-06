@@ -108,6 +108,17 @@
                                             </span>
                                         @enderror
                                     </div>
+
+                                    <div class="form-group g-2 mb-3">
+                                        <label for="acknowledge" class="form-label">Acknowledge</label>
+                                        <textarea class="form-control" id="acknowledge"  name="acknowledge" rows="6">{!! $Acknowledge !!} </textarea>
+                                        @error('acknowledge')
+                                        <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
                                     <div class="form-group g-2 mb-3">
                                         <label for="quote">Quote</label>
                                         <input type="text" class="form-control"  id="quote" name="quote" required value="{{$quote}}">
@@ -128,4 +139,13 @@
             </div>
         </div>
     </main>
+@endsection
+@section('script')
+<script>
+    $(document).ready(function(){
+        $('#acknowledge').summernote({
+            height: 200,
+        });
+    });
+</script>
 @endsection
